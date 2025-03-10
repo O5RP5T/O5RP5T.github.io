@@ -1,120 +1,312 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Genesys Cloud Propose Message Demo</title>
+        <title>Genesys Cloud App Lifecycle Demo</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css" integrity="sha384-aUGj/X2zp5rLCbBxumKTCw2Z50WgIr1vs/PFN4praOTvYXWlVyh2UtNUU0KAUhAX" crossorigin="anonymous">
+        <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
         <script src="https://sdk-cdn.mypurecloud.com/client-apps/2.6.3/purecloud-client-app-sdk-de77761d.min.js"></script>
+
+
         <style>
-            #app {
-                display: flex;
-                flex-direction: column;
-                max-width: 300px;
+            body {
+                margin-left: 20px;
             }
-            .button-list, form {
-                display: flex;
-                flex-direction: column;
-                border: 1px solid #ccc;
-                padding: 0 5px;
+
+            .log {
+                overflow: auto;
+
+                height: 15em;
+
+                line-height: 1.5em;
             }
-            button, input, div {
-                font-family: Arial, Helvetica, sans-serif;
-                font-size: 16px;
-                margin: 5px 0;
+
+            section {
+                margin-top: 2em;
+                padding-left: 3em;
             }
-            button {
-                border: none;
-                background-color: #2a60c8;
-                color: #fdfdfd;
-                border-radius: 4px;
-                padding: 6px 10px;
-                box-shadow: 1px 1px 4px -1px #666;
-                cursor: pointer;
+
+            section h1 {
+                font-size: 2em;
             }
-            input {
-                padding: 6px;
-                border-radius: 4px;
-                border: 1px solid #ccc;
+
+            ul.lifecycle-event-log li.incomming::before {
+                content: '↙ ';
+                color: #FF0000;
             }
-            button:active {
-                box-shadow: none;
+            ul.lifecycle-event-log li.outgoing::before {
+                content: '↗ ';
+                color: #00FF00;
             }
-            button:disabled {
-                background-color: grey;
-                cursor: not-allowed;
+
+            footer {
+                position: fixed;
+                bottom: 0;
+                width: 100%;
+
+                text-align: center;
             }
         </style>
     </head>
+
     <body>
+        <noscript>
+            For full functionality of this site it is necessary to enable JavaScript. Here are the <a href="http://www.enable-javascript.com/" target="_blank">instructions how to enable JavaScript in your web browser</a>.
+        </noscript>
+
+        <h1>Genesys Cloud App Lifecycle Demo</h1>
+        <p>
+            Genesys Cloud Apps have a full lifecycle that developers can utilize to
+            provide a seamless experience for end users.
+        </p>
+        <hr>
+
+        <section>
+            <h1>App Lifecycle</h1>
+            <ol>
+                <li>Loading - The app's iframe is loading</li>
+                <li>Bootstrapping (Opt-in)
+                    <ul>
+                        <li>'bootstrap' message fired from Genesys Cloud after load</li>
+                        <li>Genesys Cloud awaits app 'bootstrapped' response (Will timeout)</li>
+                    </ul>
+                </li>
+                <li>Running
+                    <ul>
+                        <li>'blur' message fired from Genesys Cloud on app blur (Opt-in)</li>
+                        <li>'focus' message fired from Genesys Cloud on subsequent app focus (Opt-in)</li>
+                    </ul>
+                </li>
+                <li>Stopping (Opt-in)
+                    <ul>
+                        <li>'stop' message fired from Genesys Cloud after load</li>
+                        <li>Genesys Cloud awaits app 'stopped' response (Will timeout)</li>
+                    </ul>
+                </li>
+                <li>Stopped - The app has shut down and the iframe will be removed from Genesys Cloud</li>
+            </ol>
+        </section>
+
+        <section class="lifecycle-events">
+            <h1>Lifecycle Events Log:</h1>
+            <ul class="log lifecycle-event-log">
+            </ul>
+        </section>
+
+        <footer>
+            Icon made by
+            <a href="http://www.flaticon.com/authors/cursor-creative"
+                title="Cursor Creative">
+                Cursor Creative
+            </a>
+            from
+            <a href="http://www.flaticon.com"
+                title="Flaticon">
+                www.flaticon.com
+            </a>
+            is licensed by
+            <a href="http://creativecommons.org/licenses/by/3.0/"
+                title="Creative Commons BY 3.0"
+                target="_blank">
+                CC 3.0 BY
+            </a>
+        </footer>
+
         <script>
-        (function () {
-        const envQueryParamName = 'pcEnvironment';
-        const hostQueryParamName = 'gcHostOrigin';
-        const targetEnvQueryParamName = 'gcTargetEnv';
-        const locationSearch = (window && window.location && typeof window.location.search === 'string') ? window.location.search : '';
-        const queryParams = new URLSearchParams(locationSearch);
-        let clientApp = null;
-        if (queryParams.get(hostQueryParamName) || queryParams.get(targetEnvQueryParamName)) {
-            // Compute Genesys Cloud region from host origin
-            clientApp = new window.purecloud.apps.ClientApp({
-                gcHostOriginQueryParam: hostQueryParamName,
-                gcTargetEnvQueryParam: targetEnvQueryParamName
+            var lifecycleStatusMessageTitle = 'Lifecycle Demo App';
+            var lifecycleStatusMessageId = 'lifecycleDemo-statusMsg';
+
+            function extractParams(paramStr) {
+                let result = {};
+
+                if (paramStr) {
+                    let params = paramStr.split('&');
+                    params.forEach(function(currParam) {
+                        if (currParam) {
+                            let paramTokens = currParam.split('=');
+                            let paramName = paramTokens[0];
+                            let paramValue = paramTokens[1];
+                            if (paramName) {
+                                paramName = decodeURIComponent(paramName);
+                                paramValue = paramValue ? decodeURIComponent(paramValue) : null;
+
+                                if (!result.hasOwnProperty(paramName)) {
+                                    result[paramName] = paramValue;
+                                } else if (Array.isArray(result[paramName])) {
+                                    result[paramName].push(paramValue);
+                                } else {
+                                    result[paramName] = [result[paramName], paramValue];
+                                }
+                            }
+                        }
+                    });
+                }
+
+                return result;
+            }
+
+            function getRequireManualToastDismissal() {
+                if (window.location.search) {
+                    let paramValue = extractParams(window.location.search.substring(1)).requireManualToastDismissal;
+                    if (paramValue === 'true') {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
+            jQuery(function () {
+                let myClientApp = null;
+
+                var requireManualToastDismissal = getRequireManualToastDismissal();
+
+                var count = 0;
+                // Note: This manual check for query string is for backwards compatibility of this
+                // deployed example.  In your own apps, you can assume the query param will be
+                // provided by Genesys Cloud if you have configured it in your app's config.
+                const envQueryParamName = 'pcEnvironment';
+                const hostQueryParamName = 'gcHostOrigin';
+                const targetEnvQueryParamName = 'gcTargetEnv';
+                const locationSearch = (window && window.location && typeof window.location.search === 'string') ? window.location.search : '';
+                const queryParams = new URLSearchParams(locationSearch);
+                if (queryParams.get(hostQueryParamName) || queryParams.get(targetEnvQueryParamName)) {
+                    // Compute Genesys Cloud region from host origin
+                    myClientApp = new window.purecloud.apps.ClientApp({
+                        gcHostOriginQueryParam: hostQueryParamName,
+                        gcTargetEnvQueryParam: targetEnvQueryParamName
+                    });
+                } else if (queryParams.get(envQueryParamName)) {
+                    // Compute Genesys Cloud region from pcEnvironment
+                    myClientApp = new window.purecloud.apps.ClientApp({ pcEnvironmentQueryParam: envQueryParamName });
+                } else {
+                    // Use default Genesys Cloud region
+                    myClientApp = new window.purecloud.apps.ClientApp();
+                }
+
+                myClientApp.lifecycle.addBootstrapListener(() => {
+                    logLifecycleEvent('App Lifecycle Event: bootstrap', true);
+
+                    // Simulating bootstrap delay of 500ms
+                    window.setTimeout(() => {
+                        myClientApp.lifecycle.bootstrapped();
+                        if (requireManualToastDismissal) {
+                            myClientApp.alerting.showToastPopup(
+                                lifecycleStatusMessageTitle,
+                                `Bootstrap Complete (500ms delay):${lifecycleStatusMessageId}-bootstrap-${count}`, {
+                                    id: `${lifecycleStatusMessageId}-bootstrap-${count}`,
+                                    type: 'success',
+                                    showCloseButton: true,
+                                    timeout: 0
+                                }
+                            );
+                            count++;
+                        } else {
+                            myClientApp.alerting.showToastPopup(
+                                lifecycleStatusMessageTitle,
+                                `Bootstrap Complete (500ms delay)`, {
+                                    id: lifecycleStatusMessageId,
+                                    type: 'success',
+                                }
+                            );
+                        }
+
+                        logLifecycleEvent('Notified PC of Successful App Bootstrap', false);
+                    }, 500);
+                });
+
+                function onAppFocus () {
+                    logLifecycleEvent('App Lifecycle Event: focus', true);
+                    if (requireManualToastDismissal) {
+                        myClientApp.alerting.showToastPopup(
+                            lifecycleStatusMessageTitle,
+                            `App Focused:${lifecycleStatusMessageId}-focus-${count}`, {
+                                id: `${lifecycleStatusMessageId}-focus-${count}`,
+                                showCloseButton: true,
+                                timeout: 0
+                            }
+                        );
+                        count++;
+                    } else {
+                        myClientApp.alerting.showToastPopup(
+                        lifecycleStatusMessageTitle,
+                            'App Focused', {
+                                id: lifecycleStatusMessageId
+                            }
+                        );
+                    }
+
+                }
+                myClientApp.lifecycle.addFocusListener(onAppFocus);
+
+                function onAppBlur () {
+                    logLifecycleEvent('App Lifecycle Event: blur', true);
+                    if (requireManualToastDismissal) {
+                        myClientApp.alerting.showToastPopup(
+                            lifecycleStatusMessageTitle,
+                            `App Blurred:${lifecycleStatusMessageId}-blur-${count}`, {
+                                id: `${lifecycleStatusMessageId}-blur-${count}`,
+                                showCloseButton: true,
+                                timeout: 0
+                            }
+                        );
+                        count++;
+                    } else {
+                        myClientApp.alerting.showToastPopup(
+                            lifecycleStatusMessageTitle,
+                            'App Blurred', {
+                                id: lifecycleStatusMessageId
+                            }
+                        );
+                    }
+
+                }
+                myClientApp.lifecycle.addBlurListener(onAppBlur);
+
+                myClientApp.lifecycle.addStopListener(() => {
+                    logLifecycleEvent('App Lifecycle Event: stop', true);
+
+                    // Clean up other, persistent listeners
+                    myClientApp.lifecycle.removeFocusListener(onAppFocus);
+                    myClientApp.lifecycle.removeBlurListener(onAppBlur);
+
+                    // Simulating delay of 500ms
+                    window.setTimeout(() => {
+                        if (requireManualToastDismissal) {
+                            myClientApp.alerting.showToastPopup(
+                                lifecycleStatusMessageTitle,
+                                `App Stopped (500ms delay):${lifecycleStatusMessageId}-stop-${count}`, {
+                                    id: `${lifecycleStatusMessageId}-stop-${count}`,
+                                    type: 'error',
+                                    showCloseButton: true,
+                                    timeout: 0
+                                }
+                            );
+                            count++;
+                        } else {
+                            myClientApp.alerting.showToastPopup(
+                                lifecycleStatusMessageTitle,
+                                'App Stopped (500ms delay)', {
+                                    id: lifecycleStatusMessageId,
+                                    type: 'error',
+                                    showCloseButton: true
+                                }
+                            );
+                        }
+
+                        myClientApp.lifecycle.stopped();
+                        logLifecycleEvent('Notified PC of Successful App Stop', false);
+                    }, 500);
+                });
+
+                function logLifecycleEvent(logText, incommingEvent) {
+                    $tgt = jQuery('.lifecycle-events .log')
+                    var newItem = $('<li>' + logText + '</li>');
+                    newItem.addClass(incommingEvent ? 'incomming' : 'outgoing');
+
+                    $tgt.prepend(newItem);
+                }
             });
-        } else if (queryParams.get(envQueryParamName)) {
-            // Compute Genesys Cloud region from pcEnvironment
-            clientApp = new window.purecloud.apps.ClientApp({ pcEnvironmentQueryParam: envQueryParamName });
-        } else {
-            // Use default Genesys Cloud region
-            clientApp = new window.purecloud.apps.ClientApp();
-        }
-
-        const html = (htmlStr, template = document.createElement('template')) => {
-            template.innerHTML = htmlStr.trim();
-            return template.content.firstChild;
-        };
-
-        const node = (parent, htmlStr) => parent.appendChild(html(htmlStr));
-
-        const App = node(document.body, `<div id='app' />`);
-
-        const container = node(App, `
-            <div class="button-list">
-                <div class="header">Pre-made:</div>
-            </div>
-        `);
-
-        const precannedButtons = [
-            node(container, `<button>Thank you for contacting us</button`),
-            node(container, `<button>Have a nice day!</button`),
-            node(container, `<button>Let me ask my manager about that</button>`),
-            node(container, `<button>HTML will be <b>Sanitized</b></button>`)
-        ];
-
-        const customResponse = node(App, `
-            <form>
-                <div class="header">Custom:</div>
-                <input type="text" />
-                <button disabled type="submit">Fill</button>
-            </form>
-        `);
-
-        const [,customInput,fillCustomBtn] = customResponse.children;
-        customInput.oninput = e => {
-            fillCustomBtn.disabled = !e.target.value;
-        }
-
-        customResponse.addEventListener('submit', event => {
-            let message = event.currentTarget[0].value;
-            console.log('form: ', message);
-            clientApp.conversations.proposeInteractionMessage('insert', message);
-            event.preventDefault();
-        });
-
-        precannedButtons.forEach(button =>
-            button.addEventListener('click', event => {
-                let message = event.currentTarget.innerHTML;
-                console.log('button: ', message);
-                clientApp.conversations.proposeInteractionMessage('insert', message);
-            }));
-        }());
         </script>
     </body>
 </html>
