@@ -6,13 +6,15 @@
 <body>
     <div id="status"></div>
 <script>
+     console.log(`OPA Configuration`);
     // Configuration
     const config = {
         clientId: 'c60a35ff-3e6a-4f7b-9f92-e68c31dfa57d', // Replace with your OAuth client ID
         region: 'mypurecloud.ie',  // Replace with your region
         redirectUri: window.location.href
     };
-
+    
+    console.log(`OPA initializeOAuth`);
     // Initialize OAuth
     function initializeOAuth() {
         const authUrl = `https://login.${config.region}/oauth/authorize` +
