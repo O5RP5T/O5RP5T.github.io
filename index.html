@@ -208,6 +208,9 @@
                 let canViewInteraction = false;
                 let canViewWrapUpCodes = false;
 
+                console.log(`OPA client=`+client);
+                console.log(`OPA state=`+state);
+                
                 authenticate(client, pcEnvironment, state)
                     .then(() => {
                         authenticated = true;
@@ -302,6 +305,8 @@
                         setHidden(interactionExampleEl, false);
                     })
                     .catch(function (err) {
+                        console.log(`OPA err=`+err);
+                        
                         setHidden(authenticatingEl, true);
 
                         if (!authenticated) {
