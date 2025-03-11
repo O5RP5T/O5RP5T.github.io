@@ -165,13 +165,15 @@
                         
                         console.log(`OPA gcHostOrigin=`+queryParameters.gcHostOrigin);
                         console.log(`OPA gcTargetEnv=`+queryParameters.gcTargetEnv);
-
                         
                         clientApp = new window.purecloud.apps.ClientApp({
                             gcHostOrigin: queryParameters.gcHostOrigin,
                             gcTargetEnv: queryParameters.gcTargetEnv
                         });
+                        
                         pcEnvironment = clientApp.pcEnvironment;
+                        console.log(`OPA pcEnvironment=`+pcEnvironment);
+
                     } else if (pcEnvironment) {
                         clientApp = new window.purecloud.apps.ClientApp({ pcEnvironment });
                     } else {
