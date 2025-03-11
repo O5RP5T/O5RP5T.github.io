@@ -162,6 +162,11 @@
                 let clientApp = null;
                 try {
                     if (queryParameters.gcHostOrigin && queryParameters.gcTargetEnv) {
+                        
+                        console.log(`OPA gcHostOrigin=`+queryParameters.gcHostOrigin);
+                        console.log(`OPA gcTargetEnv=`+queryParameters.gcTargetEnv);
+
+                        
                         clientApp = new window.purecloud.apps.ClientApp({
                             gcHostOrigin: queryParameters.gcHostOrigin,
                             gcTargetEnv: queryParameters.gcTargetEnv
