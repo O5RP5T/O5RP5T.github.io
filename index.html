@@ -113,30 +113,30 @@
   
   // OPA Custom code START
   
-  
-	let apiInstance = new platformClient.UsersApi();
+console.log('OPA Custom code START');
+let apiInstance = new platformClient.UsersApi();
 
-	let opts = { 
-	  "expand": ["expand_example"], // [String] | Which fields, if any, to expand.
-	  "integrationPresenceSource": "integrationPresenceSource_example" // String | Get your presence for a given integration. This parameter will only be used when presence is provided as an expand.
-	};
-
-	// Get current user details.
-	apiInstance.getUsersMe(opts)
-	  .then((data) => {
-		console.log(`OPA getUsersMe success! data: ${JSON.stringify(data, null, 2)}`);
-		myClientApp.alerting.showToastPopup(
-            `success`, 
-            'data: ${JSON.stringify(data, null, 2)}');
-	  })
-	  .catch((err) => {
-		console.log("OPA There was a failure calling getUsersMe");
-		console.error(err);
-	  });
-	  
+let opts = { 
+  "expand": ["expand_example"], // [String] | Which fields, if any, to expand.
+  "integrationPresenceSource": "integrationPresenceSource_example" // String | Get your presence for a given integration. This parameter will only be used when presence is provided as an expand.
+};
+console.log('OPA opts='+opts);
+// Get current user details.
+apiInstance.getUsersMe(opts)
+  .then((data) => {
+	console.log("OPA getUsersMe success! data: ${JSON.stringify(data, null, 2)}");
+	myClientApp.alerting.showToastPopup(
+    "success", 
+    "data: ${JSON.stringify(data, null, 2)}");
+  })
+  .catch((err) => {
+	console.log("OPA There was a failure calling getUsersMe");
+	console.error(err);
+  });
   
   
   
+  console.log('OPA Custom code E?D');
   // OPA custom code END
   
   
