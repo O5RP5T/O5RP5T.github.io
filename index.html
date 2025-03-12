@@ -122,19 +122,23 @@
 	 // "integrationPresenceSource": "integrationPresenceSource_example" // String | Get your presence for a given integration. This parameter will only be used when presence is provided as an expand.
 	};
 
+
+	 let userData = "";
+	      
 	// Get current user details.
 	apiInstance.getUsersMe(opts)
 	  .then((data) => {
+		userData = data;
 		console.log('OPA getUsersMe success! data: ${JSON.stringify(data, null, 2)}');
 		myClientApp.alerting.showToastPopup('success', 'data: ${JSON.stringify(data, null, 2)}');
-		document.getElementById('span_userdata').innerText =  ${JSON.stringify(data, null, 2);
+		
 	  })
 	  .catch((err) => {
 		console.log("OPA There was a failure calling getUsersMe");
 		console.error(err);
 	  });
 	  
-	 
+	 document.getElementById('span_userdata').innerText =  '${JSON.stringify(userData, null, 2)';
   
   
   // OPA custom code END
