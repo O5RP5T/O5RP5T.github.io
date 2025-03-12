@@ -27,13 +27,15 @@
 
     let userDetails = null;
 
+      const platformClient = require('platformClient');
+      const client = platformClient.ApiClient.instance;
+      const usersApi = new platformClient.UsersApi();
+
     /**
      * Configure both the Platform SDK and the Client App SDK
      */
     function setupGenesysClients(){
-      const platformClient = require('platformClient');
-      const client = platformClient.ApiClient.instance;
-      const usersApi = new platformClient.UsersApi();
+
 
       // >> START client-app-sdk-step-2
       // Configure Client App
