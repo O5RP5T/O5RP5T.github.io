@@ -58,7 +58,7 @@
           userDetails = data;
 
           myClientApp.alerting.showToastPopup(
-            `Hi ${userDetails.name}`, 
+            'Hi ${userDetails.name}', 
             'Never gonna give you up, never gonna let you down 😊');
         })
         .catch(err => console.log("OPA" + err));
@@ -77,17 +77,17 @@
 
       if(searchParams.has(qParamLanguage)){
         language = searchParams.get(qParamLanguage);
-        localStorage.setItem(`${appName}_language`, language);
+        localStorage.setItem('${appName}_language', language);
       } else {
-        let local_lang = localStorage.getItem(`${appName}_language`);
+        let local_lang = localStorage.getItem('${appName}_language');
         if(local_lang) language = local_lang;
       }
 
       if(searchParams.has(qParamEnvironment)){
         environment = searchParams.get(qParamEnvironment);
-        localStorage.setItem(`${appName}_environment`, environment);
+        localStorage.setItem('${appName}_environment', environment);
       } else {
-        let local_env = localStorage.getItem(`${appName}_environment`);
+        let local_env = localStorage.getItem('${appName}_environment');
         if(local_env) environment = local_env;
       }
     }
@@ -96,8 +96,8 @@
     // After page loads...
     window.addEventListener('load', (event) => {
       assignConfiguration();
-      console.log(`OPA environment: ${environment}`);
-      console.log(`OPA language: ${language}`);
+      console.log('OPA environment: ${environment}');
+      console.log('OPA language: ${language}');
 
       setupGenesysClients()
       .then(() => { 
@@ -123,17 +123,14 @@
 	// Get current user details.
 	apiInstance.getUsersMe(opts)
 	  .then((data) => {
-		console.log("OPA getUsersMe success! data: ${JSON.stringify(data, null, 2)}");
-		myClientApp.alerting.showToastPopup(
-            "success in getUserMe", 
-            "data: ${JSON.stringify(data, null, 2)}");
+		console.log('OPA getUsersMe success! data: ${JSON.stringify(data, null, 2)}');
 	  })
 	  .catch((err) => {
 		console.log("OPA There was a failure calling getUsersMe");
 		console.error(err);
 	  });
 	  
-  
+	myClientApp.alerting.showToastPopup('success', 'data: ${JSON.stringify(data, null, 2)}');
   
   
   // OPA custom code END
