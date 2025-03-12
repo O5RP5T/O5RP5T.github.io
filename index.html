@@ -123,10 +123,10 @@
 	// Get current user details.
 	apiInstance.getUsersMe(opts)
 	  .then((data) => {
-		console.log(`OPA getUsersMe success! data: ${JSON.stringify(data, null, 2)}`);
+		console.log("OPA getUsersMe success! data: ${JSON.stringify(data, null, 2)}");
 		myClientApp.alerting.showToastPopup(
-            `success`, 
-            'data: ${JSON.stringify(data, null, 2)}');
+            "success in getUserMe", 
+            "data: ${JSON.stringify(data, null, 2)}");
 	  })
 	  .catch((err) => {
 		console.log("OPA There was a failure calling getUsersMe");
