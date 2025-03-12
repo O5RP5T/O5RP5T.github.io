@@ -30,6 +30,11 @@
 	const platformClient = require('platformClient');
     const client = platformClient.ApiClient.instance;
     const usersApi = new platformClient.UsersApi();
+	
+	let ClientApp = window.purecloud.apps.ClientApp;
+    let myClientApp = new ClientApp({
+          pcEnvironment: environment
+    });
 
     /**
      * Configure both the Platform SDK and the Client App SDK
@@ -38,10 +43,7 @@
 
       // >> START client-app-sdk-step-2
       // Configure Client App
-      let ClientApp = window.purecloud.apps.ClientApp;
-      let myClientApp = new ClientApp({
-          pcEnvironment: environment
-      });
+      
       // >> END client-app-sdk-step-2
 
       // >> START client-app-sdk-step-3
