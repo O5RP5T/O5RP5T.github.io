@@ -98,8 +98,8 @@
     // After page loads...
     window.addEventListener('load', (event) => {
       assignConfiguration();
-      console.log('OPA environment: ${environment}');
-      console.log('OPA language: ${language}');
+      console.log('OPA environment:' + environment);
+      console.log('OPA language:' + language);
 
       setupGenesysClients()
       .then(() => { 
@@ -126,13 +126,14 @@
 	apiInstance.getUsersMe(opts)
 	  .then((data) => {
 		console.log('OPA getUsersMe success! data: ${JSON.stringify(data, null, 2)}');
+		myClientApp.alerting.showToastPopup('success', 'data: ${JSON.stringify(data, null, 2)}');
 	  })
 	  .catch((err) => {
 		console.log("OPA There was a failure calling getUsersMe");
 		console.error(err);
 	  });
 	  
-	myClientApp.alerting.showToastPopup('success', 'data: ${JSON.stringify(data, null, 2)}');
+	
   
   
   // OPA custom code END
