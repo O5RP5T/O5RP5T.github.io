@@ -127,13 +127,14 @@
 	  .then((data) => {
 		console.log('OPA getUsersMe success! data: ${JSON.stringify(data, null, 2)}');
 		myClientApp.alerting.showToastPopup('success', 'data: ${JSON.stringify(data, null, 2)}');
+		document.getElementById('span_userdata').innerText =  ${JSON.stringify(data, null, 2);
 	  })
 	  .catch((err) => {
 		console.log("OPA There was a failure calling getUsersMe");
 		console.error(err);
 	  });
 	  
-	
+	 
   
   
   // OPA custom code END
@@ -164,6 +165,7 @@
     <hr>
     <p><em>Environment:&nbsp;<span id="span_environment"></span> </em></p>
     <p><em>Language:&nbsp;<span id="span_language"></span> </em></p>
+    <p><em>UserData:&nbsp;<span id="span_userdata"></span> </em></p>
   </section>
 
 </body>
