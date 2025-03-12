@@ -130,7 +130,7 @@
 	  .then((data) => {
 		userData = data;
 		console.log('OPA getUsersMe success! data: ${JSON.stringify(data, null, 2)}');
-		myClientApp.alerting.showToastPopup('success', 'data: ${JSON.stringify(data, null, 2)}');
+		myClientApp.alerting.showToastPopup('success', 'data: ' + JSON.stringify(data, null, 2));
 		
 	  })
 	  .catch((err) => {
@@ -138,7 +138,7 @@
 		console.error(err);
 	  });
 	  
-	 document.getElementById('span_userdata').innerText =  '${JSON.stringify(userData, null, 2)';
+	 document.getElementById('span_userdata').innerText =  JSON.stringify(userData, null, 2);
   
   
   // OPA custom code END
