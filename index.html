@@ -118,7 +118,7 @@
   
   // OPA Custom code START
   function opaCustomCode() {
-
+	console.log('OPA start opaCustomCode');
 	let apiInstance = new platformClient.UsersApi();
 
 	let opts = { 
@@ -126,23 +126,21 @@
 	 // "integrationPresenceSource": "integrationPresenceSource_example" // String | Get your presence for a given integration. This parameter will only be used when presence is provided as an expand.
 	};
 
-	var userData = "";
 	      
 	// Get current user details.
 	apiInstance.getUsersMe(opts)
-	  .then((data) => {
+	.then((data) => {
 		userData = data;
 		console.log('OPA getUsersMe success!');
 		myClientApp.alerting.showToastPopup('success', 'getUsersMe success!');
-		document.getElementById('span_userdata').innerText =  JSON.stringify(userData, null, 2);
+		document.getElementById('span_userdata').innerText =  JSON.stringify(data, null, 2);
 	  })
 	  .catch((err) => {
 		console.log("OPA There was a failure calling getUsersMe");
 		console.error(err);
 	  });
 	  
-	 console.log('OPA userData='+userData);
-
+	 console.log('OPA end opaCustomCode');
   }
   // OPA custom code END
   
