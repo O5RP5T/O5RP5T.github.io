@@ -133,12 +133,37 @@
 		userData = data;
 		console.log('OPA getUsersMe success!');
 		myClientApp.alerting.showToastPopup('success', 'getUsersMe success!');
-		document.getElementById('span_userdata').innerText =  JSON.stringify(data, null, 2);
+		//document.getElementById('span_userdata').innerText =  JSON.stringify(data, null, 2);
 	  })
 	  .catch((err) => {
 		console.log("OPA There was a failure calling getUsersMe");
 		console.error(err);
 	  });
+
+
+	  // GET /api/v2/routing/queues/23e3334a-e7b8-400a-9ad2-f526f691d249/members?pageNumber=1&pageSize=100&sortOrder=asc&expand=routingStatus,skills,profileSkills
+	  let queueId = "23e3334a-e7b8-400a-9ad2-f526f691d249";
+		let opts = { 
+		  "pageNumber": 1, // Number | 
+		  "pageSize": 100, // Number | Max value is 100
+		  "sortOrder": "asc", // String | Note: results are sorted by name.
+		  "expand": ["routingStatus","skills"], // [String] | Which fields, if any, to expand.
+		  "routingStatus": ["routingStatus_example"], // [String] | Filter by routing status
+		  "presence": ["presence_example"], // [String] | Filter by presence
+		  "joined": true // Boolean | Filter by joined status
+		};
+		
+		// Get the members of this queue.
+		apiInstance.getRoutingQueueMembers(queueId, opts)
+		  .then((data) => {
+		    console.log(`getRoutingQueueMembers success! data: ${JSON.stringify(data, null, 2)}`);
+		    document.getElementById('span_userdata').innerText =  JSON.stringify(data, null, 2);
+		  })
+		  .catch((err) => {
+		    console.log("There was a failure calling getRoutingQueueMembers");
+		    console.error(err);
+		  });
+	  
 	  
 	 console.log('OPA end opaCustomCode');
   }
