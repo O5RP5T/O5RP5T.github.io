@@ -121,14 +121,14 @@
 	console.log('OPA start opaCustomCode');
 	let apiInstance = new platformClient.UsersApi();
 
-	let opts = { 
+	let opts01 = { 
 	  "expand": ["routingStatus"] //, // [String] | Which fields, if any, to expand.
 	 // "integrationPresenceSource": "integrationPresenceSource_example" // String | Get your presence for a given integration. This parameter will only be used when presence is provided as an expand.
 	};
 
 	      
 	// Get current user details.
-	apiInstance.getUsersMe(opts)
+	apiInstance.getUsersMe(opts01)
 	.then((data) => {
 		userData = data;
 		console.log('OPA getUsersMe success!');
@@ -143,7 +143,7 @@
 
 	  // GET /api/v2/routing/queues/23e3334a-e7b8-400a-9ad2-f526f691d249/members?pageNumber=1&pageSize=100&sortOrder=asc&expand=routingStatus,skills,profileSkills
 	  let queueId = "23e3334a-e7b8-400a-9ad2-f526f691d249";
-		let opts = { 
+		let opts02 = { 
 		  "pageNumber": 1, // Number | 
 		  "pageSize": 100, // Number | Max value is 100
 		  "sortOrder": "asc", // String | Note: results are sorted by name.
@@ -154,7 +154,7 @@
 		};
 		
 		// Get the members of this queue.
-		apiInstance.getRoutingQueueMembers(queueId, opts)
+		apiInstance.getRoutingQueueMembers(queueId, opts02)
 		  .then((data) => {
 		    console.log(`getRoutingQueueMembers success! data: ${JSON.stringify(data, null, 2)}`);
 		    document.getElementById('span_userdata').innerText =  JSON.stringify(data, null, 2);
