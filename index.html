@@ -27,11 +27,11 @@
 
     let userDetails = null;
 	
-	const platformClient = require('platformClient');
+    const platformClient = require('platformClient');
     const client = platformClient.ApiClient.instance;
     const usersApi = new platformClient.UsersApi();
 	
-	let ClientApp = window.purecloud.apps.ClientApp;
+    let ClientApp = window.purecloud.apps.ClientApp;
     let myClientApp = new ClientApp({
           pcEnvironment: environment
     });
@@ -122,23 +122,22 @@
 	 // "integrationPresenceSource": "integrationPresenceSource_example" // String | Get your presence for a given integration. This parameter will only be used when presence is provided as an expand.
 	};
 
-
-	 var userData = "";
+	var userData = "";
 	      
 	// Get current user details.
 	apiInstance.getUsersMe(opts)
 	  .then((data) => {
 		userData = data;
-		console.log('OPA getUsersMe success! data: ${JSON.stringify(data, null, 2)}');
-		myClientApp.alerting.showToastPopup('success', 'data: ' + JSON.stringify(data, null, 2));
-		
+		console.log('OPA getUsersMe success! data: ' +  JSON.stringify(data, null, 2));
+		myClientApp.alerting.showToastPopup('success', 'getUsersMe success!');
+		  document.getElementById('span_userdata').innerText =  JSON.stringify(userData, null, 2);
 	  })
 	  .catch((err) => {
 		console.log("OPA There was a failure calling getUsersMe");
 		console.error(err);
 	  });
 	  
-	 document.getElementById('span_userdata').innerText =  JSON.stringify(userData, null, 2);
+	 
   
   
   // OPA custom code END
