@@ -109,14 +109,16 @@
         document.getElementById('span_name').innerText = userDetails.name;
 
         console.log('OPA Finished setup.');
+
+	opaCustomCode();
 		
       })
     });
   // >> END client-app-sdk
   
   // OPA Custom code START
-  
-  
+  function opaCustomCode() {
+
 	let apiInstance = new platformClient.UsersApi();
 
 	let opts = { 
@@ -140,11 +142,9 @@
 	  });
 	  
 	 console.log('OPA userData='+userData);
-  
-  
+
+  }
   // OPA custom code END
-  
-  
   
   </script>
 </head>
