@@ -128,16 +128,16 @@
 	apiInstance.getUsersMe(opts)
 	  .then((data) => {
 		userData = data;
-		console.log('OPA getUsersMe success! data: ' +  JSON.stringify(data, null, 2));
+		console.log('OPA getUsersMe success!');
 		myClientApp.alerting.showToastPopup('success', 'getUsersMe success!');
-		  document.getElementById('span_userdata').innerText =  JSON.stringify(userData, null, 2);
+		document.getElementById('span_userdata').innerText =  JSON.stringify(userData, null, 2);
 	  })
 	  .catch((err) => {
 		console.log("OPA There was a failure calling getUsersMe");
 		console.error(err);
 	  });
 	  
-	 
+	 console.log('OPA userData='+userData);
   
   
   // OPA custom code END
@@ -159,12 +159,6 @@
 <body>
   <section class="section">
     <h1 class="title is-3s">Hi <span id="span_name"></span>!</h1>
-    <p>Here are some awesome references to explore:</p>
-    <ul>
-      <li><a href="https://developer.mypurecloud.com/api/client-apps/">Client Apps</a></li>
-      <li><a href="https://developer.mypurecloud.com/api/client-apps/sdk/">Client App SDK</a></li>
-      <li><a href="https://github.com/MyPureCloud/client-app-sdk">Github repo with more examples.</a></li>
-    </ul>
     <hr>
     <p><em>Environment:&nbsp;<span id="span_environment"></span> </em></p>
     <p><em>Language:&nbsp;<span id="span_language"></span> </em></p>
